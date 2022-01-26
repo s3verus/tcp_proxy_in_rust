@@ -41,7 +41,7 @@ fn handle_connection(mut stream: TcpStream) {
     let mut stream_forward = TcpStream::connect(format!("{}",//"ident.me:80"
         match host {
             None => String::from("can't connect to parsed server!"),
-            Some(ref x) => format!("{}:80",x), // what the hell, 80?
+            Some(ref x) => if x.contains(":") { format!("{}", x) } else { format!("{}:80", x) }, // what the hell, 80?
         }
         ).as_str()).expect("can't connect to server!");
 
