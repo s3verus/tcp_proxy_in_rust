@@ -1,6 +1,33 @@
 use std::io::prelude::*;
 use std::net::TcpStream;
 
+fn create_request(_path: std::option::Option<&str>, _host: std::option::Option<&str>, user_agent: &str) -> String {
+    // craete request
+    let mut http_request = String::new();
+    http_request.push_str(format!("{}",
+                                  match _path {
+                                      None => "can't find Path!",
+                                      Some(ref x) => x,
+                                  }
+                                  ).as_str());
+    http_request.push_str("\r\n");
+    http_request.push_str(format!("{}",
+                                  match _host {
+                                      None => "can't find Host!",
+                                      Some(ref x) => x,
+                                  }
+                                  ).as_str());
+    http_request.push_str("\r\n");
+    http_request.push_str(format!("User-Agent: {}", user_agent).as_str());
+    // http_request.push_str("\r\n");
+    // http_request.push_str("Connection: close");
+    http_request.push_str("\r\n");
+    http_request.push_str("\r\n");
+
+    // return request
+    http_request
+}
+
 pub fn handle_connection(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
     stream.read(&mut buffer).unwrap();
@@ -33,31 +60,9 @@ pub fn handle_connection(mut stream: TcpStream) {
         }
         ).as_str()).expect("can't connect to server!");
 
-    // craete request
-    let mut http_request = String::new();
-    http_request.push_str(format!("{}",
-                                  match _path {
-                                      None => "can't find Path!",
-                                      Some(ref x) => x,
-                                  }
-                                  ).as_str());
-    http_request.push_str("\r\n");
-    http_request.push_str(format!("{}",
-                                  match _host {
-                                      None => "can't find Host!",
-                                      Some(ref x) => x,
-                                  }
-                                  ).as_str());
-    http_request.push_str("\r\n");
-    http_request.push_str(format!("User-Agent: {}", user_agent).as_str());
-    // http_request.push_str("\r\n");
-    // http_request.push_str("Connection: close");
-    http_request.push_str("\r\n");
-    http_request.push_str("\r\n");
-    
-
-    // send request as bytes
-    let request_as_bytes: &[u8] = http_request.as_bytes();
+    // create request ;)
+    let request_as_bytes = create_request(_path, _host, user_agent);
+    let request_as_bytes: &[u8] = request_as_bytes.as_bytes();
 
     println!("\nOur Request:\n{}", String::from_utf8_lossy(&request_as_bytes[..]));
     
