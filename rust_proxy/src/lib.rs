@@ -1,7 +1,7 @@
 use std::io::prelude::*;
 use std::net::TcpStream;
 
-fn create_request(_path: std::option::Option<&str>, _host: std::option::Option<&str>, user_agent: &str) -> String {
+fn create_request(_path: Option<&str>, _host: Option<&str>, user_agent: &str) -> String {
     // craete request
     let mut http_request = String::new();
     http_request.push_str(format!("{}",
